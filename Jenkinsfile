@@ -2,13 +2,13 @@ pipeline {
   environment {
       repoName = 'duckiebot-base'
       registry = '192.168.1.5:5000'
-      imageName = ''
+      imageName = "$registry/$repoName:$BUILD_NUMBER"
     }
   agent any
   stages {
     stage('Build') {
       steps {
-        imageName = "$registry/$repoName:$BUILD_NUMBER"
+        
         sh docker.build "$imageName"
       }
     }
