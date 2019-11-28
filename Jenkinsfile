@@ -12,7 +12,7 @@ pipeline {
 
     stage('Push to Registry') {
       steps {
-        sh docker.withRegistry(\'$registry\') {
+        sh docker.withRegistry('$registry') {
                 imageName.push() 
             }
         }
