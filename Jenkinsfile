@@ -9,7 +9,7 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          echo '$imageName'
+          echo "$imageName"
         }
       }
     }
