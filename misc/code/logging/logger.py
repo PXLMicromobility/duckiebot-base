@@ -51,10 +51,8 @@ class Logger:
 
 if __name__ == '__main__':
     if len(sys.argv) is 1:
-        raise Exception("Destination Argument cannot be None or empty")
-    if len(sys.argv) is 2:
         raise Exception("Robot Name cannot be None or empty")
-    logger = Logger(destination=sys.argv[1], robot_name=sys.argv[2], time=datetime)
+    logger = Logger(destination="/data/logs", robot_name=sys.argv[1], time=datetime)
     rospy.spin()    
 
 # scp thizzhead@172.16.104.139:/home/thizzhead/duckiebot-base/misc/code/logging/logger.py .
