@@ -8,17 +8,14 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        //sh imageName = docker.build "$registry/$repoName:$BUILD_NUMBER"
-        imageName = "$registry/$repoName:$BUILD_NUMBER"
-        echo imageName
+        sh imageName = docker.build "$registry/$repoName:$BUILD_NUMBER"
       }
     }
 
     stage('Push to Registry') {
       steps {
         sh docker.withRegistry('$registry') {
-                //imageName.push() 
-          echo 'push'
+                imageName.push() 
             }
         }
       }
