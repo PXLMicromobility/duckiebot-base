@@ -1,18 +1,19 @@
 #!/usr/bin/env python
-import os, sys
 import zipfile
+import os, sys
+import datetime
 
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(file))
+if __name__ == "__main__":
+    folder_name = "/data/logs"
+    zip_name = sys.argv[1] + "_logs_" + str(datetime.datetime.now()).replace(" ", "")
 
-if __name__ == '__main__':
-    if len(sys.argv) is 1:
-        raise Exception("The source directory is required!")
-    src = sys.argv[1]
-    dest = sys.argv[2]
-    zipf = zipfile.ZipFile(dest + '.zip', 'w', zipfile.ZIP_DEFLATED)
-    zipdir(src, zipf)
-    zipf.close()
+    with zipfile.ZipFile(os.path.join(folder_name, zip_name) + '.zip', 'w') as zf:
+        for item in os.listdir(folder_name):
+            if item.endswith(".zip"):
+                continue
+
+            if os.path.isfile(os.path.join(folder_name, item)):
+                zf.write(os.path.join(folder_name, item), item)
+            else:
+                for file in os.listdir(os.path.join(folder_name, item)):
+                    zf.write(os.path.join(folder_name, item, file), os.path.join(item, file))

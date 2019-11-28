@@ -28,9 +28,9 @@ class Logger:
         self.file_name = destination + "/" + self.robot_name + "_" + self.time_instatiated
         with open(self.file_name + '.csv', mode='w') as csv_file:
             csv_file.write("seq,x,y,vel_left,vel_right\n")
-        rospy.Subscriber("/greta/wheels_driver_node/wheels_cmd_executed", WheelsCmdStamped, self.wheels_executed_callback)
-        rospy.Subscriber("/greta/camera_node/image/compressed", CompressedImage, self.camera_callback)
-        rospy.Subscriber("/greta/joy", Joy, self.joy_callback)
+        rospy.Subscriber("/" + self.robot_name + "/wheels_driver_node/wheels_cmd_executed", WheelsCmdStamped, self.wheels_executed_callback)
+        rospy.Subscriber("/" + self.robot_name + "/camera_node/image/compressed", CompressedImage, self.camera_callback)
+        rospy.Subscriber("/" + self.robot_name + "/joy", Joy, self.joy_callback)
 
     
     def wheels_executed_callback(self, data):
