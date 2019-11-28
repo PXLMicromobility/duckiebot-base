@@ -9,14 +9,15 @@ pipeline {
     stage('Build') {
       steps {
         //sh imageName = docker.build "$registry/$repoName:$BUILD_NUMBER"
-        print "$registry/$repoName:$BUILD_NUMBER"
+        echp "$registry/$repoName:$BUILD_NUMBER"
       }
     }
 
     stage('Push to Registry') {
       steps {
         sh docker.withRegistry('$registry') {
-                imageName.push() 
+                //imageName.push() 
+          echo 'push'
             }
         }
       }
