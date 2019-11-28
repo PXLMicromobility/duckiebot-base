@@ -1,5 +1,5 @@
 #!/bin/bash
-# USAGE: record_sensors.sh <duckiebot_name>
+# USAGE: ./rosbag_topics.sh <duckiebot_name>
 
 if [ -z "$1" ]
   then 
@@ -12,7 +12,7 @@ rosrun topic_tools throttle messages /$1/camera_node/image/compressed 1.0 &
 sleep 5
 
 rosbag record /$1/camera_node/image/compressed_throttle -o /data/logs/$1_camera &
-rosbag record /$1/wheels_driver_node/wheels_cmd -o /data/logs/$1_wheels &
+rosbag record /$1/wheels_driver_node/wheels_cmd_executed -o /data/logs/$1_wheels &
 rosbag record /$1/kinematics_node/velocity -o /data/logs/$1_velocity &
 
 wait $!
