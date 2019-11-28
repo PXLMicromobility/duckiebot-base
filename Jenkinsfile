@@ -3,7 +3,7 @@ pipeline {
   environment {
     repoName = 'duckiebot-base'
     registry = '192.168.1.5:5000'
-    imageName = '$registry/$repoName:$BUILD_NUMBER'
+    imageName = "$registry/$repoName:$BUILD_NUMBER"
   }
   stages {
     stage('Build') {
