@@ -4,7 +4,9 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          sh docker.build "$imageName"
+
+
+          sh  docker.build -t "$imageName"
         }
 
       }
@@ -16,7 +18,6 @@ pipeline {
           sh docker.withRegistry('$registry') {
             imageName.push()
           }
-
         }
 
       }
