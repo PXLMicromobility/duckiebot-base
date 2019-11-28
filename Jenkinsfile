@@ -6,6 +6,7 @@ pipeline {
         script {
           echo "{$imageName}"
           sh docker.build ("$imageName")
+          sh docker.push()
         }
 
       }
