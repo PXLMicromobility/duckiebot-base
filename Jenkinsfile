@@ -8,7 +8,9 @@ pipeline {
   stages {
     stage('Build') {
       steps {
+        script {
         sh docker.build "$imageName"
+        }
       }
     }
 
