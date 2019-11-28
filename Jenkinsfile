@@ -9,7 +9,8 @@ pipeline {
     stage('Build') {
       steps {
         //sh imageName = docker.build "$registry/$repoName:$BUILD_NUMBER"
-        echp "$registry/$repoName:$BUILD_NUMBER"
+        imageName = "$registry/$repoName:$BUILD_NUMBER"
+        echo imageName
       }
     }
 
