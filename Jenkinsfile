@@ -10,6 +10,7 @@ pipeline {
       steps {
         script {
           echo "{$imageName}"
+          sh docker.build ("{$imageName}")
         }
       }
     }
