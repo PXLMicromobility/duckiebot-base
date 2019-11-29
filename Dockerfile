@@ -27,6 +27,8 @@ RUN bash -c "source /home/software/docker/env.sh"
 # Leave it here to run it manually.
 # RUN bash -c "source /home/software/docker/env.sh && /home/software/what-the-duck"
 
+RUN mkdir /data/logs
+
 WORKDIR /home/software
 
 ENTRYPOINT ["/home/software/docker/entrypoint.sh"]
