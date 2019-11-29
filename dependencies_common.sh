@@ -40,6 +40,7 @@ sudo apt remove -y \
 
 pip install --user --upgrade -r requirements.txt
 pip install --user jpeg4py
+pip install --user pyglet
 
 # None of this should be needed. Next time you think you need it, let me know and we figure it out. -AC
 # sudo pip install --upgrade pip setuptools wheel
