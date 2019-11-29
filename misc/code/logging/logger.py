@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-import numpy, sys, csv, datetime
+import numpy, sys, csv, datetime, os
 from sensor_msgs.msg import CompressedImage, Joy
 from duckietown_msgs.msg import WheelsCmdStamped 
 
@@ -18,8 +18,7 @@ class Logger:
         rospy.init_node('logger', anonymous=True)
         self.seq = 0
         # This represents the last known image and joy message that will later be used in the wheels_executed_callback to write them to files.
-        self.LKimage = None 
-        self.LKjoy = None
+        self.LKimage = None
         self.LKjoy = {"seq": self.seq, "axes": [0,0,0,0,0,0], "buttons": [0,0,0,0,0,0,0]}
         self.destination = destination
         self.robot_name = robot_name
@@ -46,8 +45,10 @@ class Logger:
         self.LKjoy = {"seq": self.seq, "axes": data.axes, "buttons": data.buttons}
 
     def write_image(self, name, format, data):
+        if not os.path.isdir(self.destination + "/images/"):
+            os.mkdir(self.destination + "/images/")
         with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
-                file.write(data)
+            file.write(data)
 
 if __name__ == '__main__':
     if len(sys.argv) is 1:
