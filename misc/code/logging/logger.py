@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
-import numpy, sys, csv, datetime, os
+import zipfile
+import numpy, sys, csv, datetime, os, signal
 from sensor_msgs.msg import CompressedImage, Joy
 from duckietown_msgs.msg import WheelsCmdStamped 
 
@@ -50,10 +51,44 @@ class Logger:
         with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
             file.write(data)
 
-if __name__ == '__main__':
+def get_robot_name():
     if len(sys.argv) is 1:
         raise Exception("Robot Name cannot be None or empty")
-    logger = Logger(destination="/data/logs", robot_name=sys.argv[1], time=datetime)
-    rospy.spin()    
+    return sys.argv[1]
 
-# scp thizzhead@172.16.104.139:/home/thizzhead/duckiebot-base/misc/code/logging/logger.py .
+def signal_handler(sig, frame):
+    print("\nZipping... Wait a second please.\n")
+    folder_name = "/data/logs"
+    zip_name = get_robot_name() + "_logs_" + str(datetime).replace(" ", "")
+
+    if len(os.listdir(folder_name)) is 0:
+        print("No files in directory")
+        sys.exit()
+
+    with zipfile.ZipFile(os.path.join(folder_name, zip_name) + '.zip', 'w') as zf:
+        for item in os.listdir(folder_name):
+            if item.endswith(".zip"):
+                continue
+
+            if os.path.isfile(os.path.join(folder_name, item)):
+                zf.write(os.path.join(folder_name, item), item)
+            else:
+                for file in os.listdir(os.path.join(folder_name, item)):
+                    zf.write(os.path.join(folder_name, item, file), os.path.join(item, file))
+    
+    for item in os.listdir(folder_name):
+        if item.endswith(".zip"):
+            continue
+        if os.path.isfile(os.path.join(folder_name, item)):
+            os.remove(os.path.join(folder_name, item))
+        if os.path.isdir(os.path.join(folder_name, item)):
+            for file in os.listdir(os.path.join(folder_name, item)):
+                if os.path.isfile(os.path.join(folder_name, item, file)):
+                    os.remove(os.path.join(folder_name, item, file))
+            os.rmdir(os.path.join(folder_name, item)) 
+    sys.exit()
+
+if __name__ == '__main__':
+    signal.signal(signal.SIGINT, signal_handler)
+    logger = Logger(destination="/data/logs", robot_name=get_robot_name(), time=datetime)
+    rospy.spin()
