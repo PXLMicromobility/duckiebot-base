@@ -29,7 +29,8 @@ sudo apt install -y \
     python-smbus \
     libturbojpeg \
     python-cffi \
-    python-skimage
+    python-skimage \
+    nano
 
 sudo apt remove -y \
 	python-ruamel.yaml \
