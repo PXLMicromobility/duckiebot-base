@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print("No files in directory")
         sys.exit()
 
-    with zipfile.ZipFile(os.path.join(folder_name, zip_name) + '.zip', 'w') as zf:
+    with zipfile.ZipFile(os.path.join(folder_name, zip_name) + '.zip', 'w+') as zf:
         for item in os.listdir(folder_name):
             if item.endswith(".zip"):
                 continue

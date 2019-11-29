@@ -25,7 +25,7 @@ class Logger:
         self.time_instatiated = str(time).replace(" ", "")[:-7]
         self.destination = destination
         self.file_name = destination + "/" + self.robot_name + "_" + self.time_instatiated
-        with open(self.file_name + '.csv', mode='w') as csv_file:
+        with open(self.file_name + '.csv', mode='w+') as csv_file:
             csv_file.write("seq,x,y,vel_left,vel_right\n")
         rospy.Subscriber("/" + self.robot_name + "/wheels_driver_node/wheels_cmd_executed", WheelsCmdStamped, self.wheels_executed_callback)
         rospy.Subscriber("/" + self.robot_name + "/camera_node/image/compressed", CompressedImage, self.camera_callback)
@@ -33,7 +33,7 @@ class Logger:
 
     
     def wheels_executed_callback(self, data):
-        with open(self.file_name + '.csv', mode='a') as csv_file:
+        with open(self.file_name + '.csv', mode='a+') as csv_file:
             csv_file.write("{},{},{},{},{}\n".format(self.seq, self.LKjoy["axes"][1], self.LKjoy['axes'][3], data.vel_left, data.vel_right))
         self.write_image(self.seq, self.LKimage["format"], self.LKimage["data"])
         self.seq += 1
