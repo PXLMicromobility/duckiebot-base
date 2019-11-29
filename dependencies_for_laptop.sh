@@ -6,5 +6,6 @@ set -x
 
 sudo apt install -y \
 	bibtex2html \
-	pdftk \
-	python-pyglet==1.3.2
+	pdftk
+
+pip install --user pyglet==1.3.2
