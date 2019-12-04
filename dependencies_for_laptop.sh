@@ -8,4 +8,4 @@ sudo apt install -y \
 	bibtex2html \
 	pdftk
 
-pip install --user pyglet==1.3.2
+pip install --user pyglet
