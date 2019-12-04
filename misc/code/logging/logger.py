@@ -2,6 +2,7 @@
 import rospy
 import zipfile
 import numpy, sys, csv, datetime, os, signal
+from PIL import Image
 from sensor_msgs.msg import CompressedImage, Joy
 from duckietown_msgs.msg import WheelsCmdStamped 
 
@@ -48,8 +49,11 @@ class Logger:
     def write_image(self, name, format, data):
         if not os.path.isdir(self.destination + "/images/"):
             os.mkdir(self.destination + "/images/")
-        with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
-            file.write(data)
+        # with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
+        #     file.write(data)
+        img = Image.frombytes("RGB", (640, 480), data)
+        img.save(self.destination + "/images/" + str(name) + "." + format)
+        
 
 def get_robot_name():
     if len(sys.argv) is 1:
