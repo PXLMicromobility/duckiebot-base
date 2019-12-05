@@ -6,14 +6,16 @@ This script allows you to manually control the duckiebot using a joystick
 
 """
 
-import sys
+import sys, signal
 import pyglet
 import rospy
 import numpy as np
 
-from functools import partialmethod
+from functools import partial
 from sensor_msgs.msg import Joy
 
+
+jb = None
 
 class Joyboy:
 
@@ -65,21 +67,24 @@ class Joyboy:
         self.msg.axes = [0.0, -x, 0.0, -y, 0.0, 0.0, 0.0, 0.0]
         self.pub.publish(self.msg)
 
-def on_close(sig, frame, joyboy):
+def on_close(sig, frame):
     print("Closing")
-    stop_message = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    joyboy.pub.publish(stop_message)
+    stop_message = Joy()
+    stop_message.axes = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    jb.pub.publish(stop_message)
     rospy.signal_shutdown("Closed")
     pyglet.app.exit()
     sys.exit()
+
 
 if __name__ == "__main__":
 
     rospy.init_node('joyboi', anonymous=True)
 
     joyboy = Joyboy()
+    jb = joyboy
 
-    signal.signal(signal.SIGINT, partialmethod(on_close, joyboy))
+    signal.signal(signal.SIGINT, on_close)
 
     pyglet.clock.schedule_interval(joyboy.update, joyboy.interval*0.01)
 
