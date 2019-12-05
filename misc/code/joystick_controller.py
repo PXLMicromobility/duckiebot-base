@@ -19,7 +19,7 @@ class Joyboy:
         self.msg = Joy()
         self.pub = rospy.Publisher("/greta/joy", Joy, queue_size=1)
         #amount of millisecods of wait between updates
-        self.interval = 100 
+        self.interval = 1
 
     def on_joybutton_press(self, joystick, button):
         """
@@ -59,9 +59,10 @@ class Joyboy:
         """
         global recording, positions, actions
 		
-        x = joystick.x
-        y = joystick.y
+        x = joystick.y
+        y = joystick.x
 
+	print([x, y])
         # No actions took place
         if abs(x) < 0.07 and abs(y) < 0.07:
             return
@@ -77,7 +78,7 @@ if __name__ == "__main__":
 
     joyboy = Joyboy()
 
-    pyglet.clock.schedule_interval(joyboy.update, joyboy.interval*0.030)
+    pyglet.clock.schedule_interval(joyboy.update, joyboy.interval*0.01)
 
     # Registers joysticks and recording controls
     joysticks = pyglet.input.get_joysticks()

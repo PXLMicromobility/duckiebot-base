@@ -3,9 +3,9 @@ import rospy
 import zipfile
 import numpy, sys, csv, datetime, os, signal
 from PIL import Image
+from io import BytesIO
 from sensor_msgs.msg import CompressedImage, Joy
 from duckietown_msgs.msg import WheelsCmdStamped 
-
 
 # Joy [(0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0), (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]
 # Wheels_Cmd_Executed [-0.47752153873443604, -0.47752153873443604]
@@ -51,10 +51,9 @@ class Logger:
             os.mkdir(self.destination + "/images/")
         # with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
         #     file.write(data)
-        img = Image.frombytes("RGB", (640, 480), data)
+        img = Image.open(BytesIO(data))
         img.save(self.destination + "/images/" + str(name) + "." + format)
         
-
 def get_robot_name():
     if len(sys.argv) is 1:
         raise Exception("Robot Name cannot be None or empty")
