@@ -1,17 +1,28 @@
 pipeline {
-  agent any
+  agent none
   stages {
-    stage('Build') {
+    stage('Checkout') {
+      agent { label 'master' }
       steps {
-        echo "$imageName"
-        sh 'docker build -t "$imageName" .'
+        sh 'hostname'
+        echo 'Image to be built & pushed is "$imageName"'
+      }
+    }
+
+    stage('Build') {
+      agent { label 'robotnik' }
+      steps {
+        sh 'hostname && ls'
+        sh 'docker buildx build --platform linux/arm/v7 -t "$imageName" .'
+        sh 'docker push "$imageName"'
       }
     }
 
   }
   environment {
     repoName = 'duckietown-base'
-    registry = '192.168.1.5:5000'
-    imageName = "$registry/$repoName:$BUILD_NUMBER"
+    dockerHubUser = 'azogh'
+    imageName = "$dockerHubUser/$repoName:$BUILD_NUMBER"
+    registryCredential = 'DockerHub'
   }
 }
