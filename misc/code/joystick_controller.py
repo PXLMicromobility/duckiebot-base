@@ -24,7 +24,8 @@ class Joyboy:
         self.msg = Joy()
         self.pub = rospy.Publisher("/greta/joy", Joy, queue_size=1)
         #amount of millisecods of wait between updates
-        self.interval = 1
+        self.interval = 30
+        self.stopped = True
 
     def on_joybutton_press(self, joystick, button):
         """
@@ -62,8 +63,16 @@ class Joyboy:
 
         # No actions took place
         if abs(x) < 0.07 and abs(y) < 0.07:
-            return
+            if self.stopped:
+                return
+            else:
+                self.msg.axes = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                self.stopped = True
+                self.pub.publish(self.msg)
+                return
 
+        
+        self.stopped = False
         self.msg.axes = [0.0, -x, 0.0, -y, 0.0, 0.0, 0.0, 0.0]
         self.pub.publish(self.msg)
 
