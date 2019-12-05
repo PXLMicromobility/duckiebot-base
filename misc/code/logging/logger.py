@@ -49,8 +49,6 @@ class Logger:
     def write_image(self, name, format, data):
         if not os.path.isdir(self.destination + "/images/"):
             os.mkdir(self.destination + "/images/")
-        # with open(self.destination + "/images/" + str(name) + "." + format, "w") as file:
-        #     file.write(data)
         img = Image.open(BytesIO(data))
         img.save(self.destination + "/images/" + str(name) + "." + format)
         
@@ -59,7 +57,7 @@ def get_robot_name():
         raise Exception("Robot Name cannot be None or empty")
     return sys.argv[1]
 
-def signal_handler(sig, frame):
+def on_close(sig, frame):
     print("\nZipping... Wait a second please.\n")
     folder_name = "/data/logs"
     zip_name = get_robot_name() + "_logs_" + str(datetime).replace(" ", "")
@@ -92,6 +90,6 @@ def signal_handler(sig, frame):
     sys.exit()
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, on_close)
     logger = Logger(destination="/data/logs", robot_name=get_robot_name(), time=datetime)
     rospy.spin()

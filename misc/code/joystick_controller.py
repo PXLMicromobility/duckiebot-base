@@ -2,13 +2,16 @@
 
 """
 Comes from the Duckietown/gym-duckietown repository
-This script allows you to manually control the duckiebot
+This script allows you to manually control the duckiebot using a joystick
+
 """
 
 import sys
 import pyglet
 import rospy
 import numpy as np
+
+from functools import partialmethod
 from sensor_msgs.msg import Joy
 
 
@@ -25,11 +28,6 @@ class Joyboy:
         """
         Event Handler for Controller Button Inputs
         Relevant Button Definitions:
-        1 - A - Starts / Stops Recording
-        0 - X - Deletes last Recording
-        2 - Y - Resets Env.
-
-        Triggers on button presses to control recording capabilities
         """
         global recording, positions, actions
 
@@ -54,29 +52,34 @@ class Joyboy:
 
     def update(self, dt):
         """
-        This function is called at every frame to handle
-        movement/stepping and redrawing
+        This function is called at every frame to handle movement
         """
-        global recording, positions, actions
 		
         x = joystick.y
         y = joystick.x
 
-	print([x, y])
         # No actions took place
         if abs(x) < 0.07 and abs(y) < 0.07:
             return
 
-
-
         self.msg.axes = [0.0, -x, 0.0, -y, 0.0, 0.0, 0.0, 0.0]
         self.pub.publish(self.msg)
+
+def on_close(sig, frame, joyboy):
+    print("Closing")
+    stop_message = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    joyboy.pub.publish(stop_message)
+    rospy.signal_shutdown("Closed")
+    pyglet.app.exit()
+    sys.exit()
 
 if __name__ == "__main__":
 
     rospy.init_node('joyboi', anonymous=True)
 
     joyboy = Joyboy()
+
+    signal.signal(signal.SIGINT, partialmethod(on_close, joyboy))
 
     pyglet.clock.schedule_interval(joyboy.update, joyboy.interval*0.01)
 
@@ -89,5 +92,4 @@ if __name__ == "__main__":
 
     # Enter main event loop
     pyglet.app.run()
-
     rospy.spin()
