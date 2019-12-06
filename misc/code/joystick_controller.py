@@ -59,7 +59,7 @@ class Joyboy:
         """
 		
         x = joystick.y
-        y = joystick.x
+        y = joystick.x * 0.5
 
         # No actions took place
         if abs(x) < 0.07 and abs(y) < 0.07:
