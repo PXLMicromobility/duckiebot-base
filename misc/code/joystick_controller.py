@@ -32,7 +32,6 @@ class Joyboy:
         Event Handler for Controller Button Inputs
         Relevant Button Definitions:
         """
-        global recording, positions, actions
 
         # A Button
         if button == 1:
@@ -59,7 +58,7 @@ class Joyboy:
         """
 		
         x = joystick.y
-        y = joystick.x * 0.5
+        y = joystick.x
 
         # No actions took place
         if abs(x) < 0.07 and abs(y) < 0.07:
