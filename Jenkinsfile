@@ -21,7 +21,7 @@ pipeline {
   }
   environment {
     repoName = 'duckietown-base'
-    dockerHubUser = 'azogh'
+    organization = 'pxlmicromobility'
     imageName = "$dockerHubUser/$repoName:$BUILD_NUMBER"
     registryCredential = 'DockerHub'
   }
