@@ -13,7 +13,7 @@ pipeline {
       agent { label 'robotnik' }
       steps {
         sh 'hostname && ls'
-        sh 'docker buildx build --platform linux/arm/v7 -t "$imageName" .'
+        sh 'docker buildx build --platform linux/arm/v7 --load -t "$imageName" .'
         sh 'docker push "$imageName"'
       }
     }
@@ -21,8 +21,8 @@ pipeline {
   }
   environment {
     repoName = 'duckietown-base'
-    dockerHubUser = 'azogh'
-    imageName = "$dockerHubUser/$repoName:$BUILD_NUMBER"
+    organization = 'pxlmicromobility'
+    imageName = "$organization/$repoName:$BUILD_NUMBER"
     registryCredential = 'DockerHub'
   }
 }
